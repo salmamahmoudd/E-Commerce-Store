@@ -1,0 +1,43 @@
+<nav class="navbar">
+  <div class="container nav-wrapper">
+
+    <!-- Logo -->
+    <a routerLink="/" class="logo">Shop<span>Brand</span></a>
+
+    <!-- Desktop Right -->
+    <div class="nav-right desktop">
+      <div class="social-icons">
+        <a><i class="fab fa-facebook-f"></i></a>
+        <a><i class="fab fa-twitter"></i></a>
+        <a><i class="fab fa-instagram"></i></a>
+      </div>
+
+      <div class="auth-buttons">
+        <a routerLink="/login" class="btn-outline">Login</a>
+        <a routerLink="/register" class="btn-primary">Register</a>
+      </div>
+    </div>
+
+    <!-- Hamburger -->
+    <div class="hamburger" (click)="menuOpen = !menuOpen">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
+  </div>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" *ngIf="menuOpen">
+    <div class="social-icons">
+      <a><i class="fab fa-facebook-f"></i></a>
+      <a><i class="fab fa-twitter"></i></a>
+      <a><i class="fab fa-instagram"></i></a>
+    </div>
+
+    <div class="auth-buttons">
+      <a routerLink="/login" class="btn-outline">Login</a>
+      <a routerLink="/register" class="btn-primary">Register</a>
+    </div>
+  </div>
+</nav>

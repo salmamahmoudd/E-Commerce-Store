@@ -1,0 +1,10 @@
+.auth-input {
+  padding-left: 2.5rem; 
+}
+.auth-icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #aaa;
+}

@@ -1,0 +1,50 @@
+<app-navbar></app-navbar>
+
+<div class="dashboard">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      Admin<span>Panel</span>
+    </div>
+
+    <nav class="sidebar-nav">
+
+
+      <a routerLink="users" routerLinkActive="active">
+        <i class="fas fa-users"></i>
+        Users
+      </a>
+
+      <a routerLink="category" routerLinkActive="active">
+        <i class="fas fa-list"></i>
+        Categories
+      </a>
+
+      <a routerLink="subcategory" routerLinkActive="active">
+        <i class="fas fa-layer-group"></i>
+        Subcategories
+      </a>
+
+      <a routerLink="product" routerLinkActive="active">
+        <i class="fas fa-box"></i>
+        Products
+      </a>
+
+       <a routerLink="testimonials" routerLinkActive="active">
+        <i class="fas fa-box"></i>
+        Testimonials
+      </a>
+
+         <a routerLink="allorders" routerLinkActive="active">
+        <i class="fas fa-box"></i>
+        AllOrders
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Content -->
+  <main class="dashboard-content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

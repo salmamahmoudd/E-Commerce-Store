@@ -1,0 +1,101 @@
+<app-auth-navbar></app-auth-navbar>
+
+<div class="auth-page">
+  <form
+    [formGroup]="registerForm"
+    (ngSubmit)="register()"
+    class="auth-card"
+  >
+
+    <h2 class="auth-title">Register</h2>
+
+    <!-- Name -->
+    <div class="relative">
+      <input
+        type="text"
+        placeholder="Name"
+        formControlName="name"
+        class="auth-input w-full"
+      />
+      <i class="fa-solid fa-user auth-icon"></i>
+      <p *ngIf="registerForm.get('name')?.touched && registerForm.get('name')?.invalid" class="auth-error">
+        Name is required (min 3 chars)
+      </p>
+    </div>
+
+    <!-- Email -->
+    <div class="relative">
+      <input
+        type="email"
+        placeholder="Email"
+        formControlName="email"
+        class="auth-input w-full"
+      />
+      <i class="fa-solid fa-envelope auth-icon"></i>
+      <p *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.invalid" class="auth-error">
+        Valid email is required
+      </p>
+    </div>
+
+    <!-- Phone -->
+    <div class="relative">
+      <input
+        type="text"
+        placeholder="Phone"
+        formControlName="phone"
+        class="auth-input w-full"
+      />
+      <i class="fa-solid fa-phone auth-icon"></i>
+      <p *ngIf="registerForm.get('phone')?.touched && registerForm.get('phone')?.invalid" class="auth-error">
+        Valid phone number is required
+      </p>
+    </div>
+
+    <!-- Password -->
+    <div class="relative">
+      <input
+        type="password"
+        placeholder="Password"
+        formControlName="password"
+        class="auth-input w-full"
+      />
+      <i class="fa-solid fa-lock auth-icon"></i>
+      <p *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.invalid" class="auth-error">
+        Password is required (min 6 chars)
+      </p>
+    </div>
+
+    <!-- Confirm Password -->
+    <div class="relative">
+      <input
+        type="password"
+        placeholder="Confirm Password"
+        formControlName="repassword"
+        class="auth-input w-full"
+      />
+      <i class="fa-solid fa-lock auth-icon"></i>
+      <p *ngIf="registerForm.errors?.['mismatch'] && registerForm.get('repassword')?.touched" class="auth-error">
+        Passwords do not match
+      </p>
+    </div>
+
+    <!-- Submit Button -->
+    <button
+      type="submit"
+      [disabled]="registerForm.invalid"
+      class="btn-primary w-full"
+    >
+      Register
+    </button>
+
+    <!-- Already have account -->
+    <p class="text-center text-sm text-white">
+      Already have an account?
+<a routerLink="/login" class="auth-link">Login</a>
+
+    </p>
+
+  </form>
+</div>
+
+<app-footer></app-footer>

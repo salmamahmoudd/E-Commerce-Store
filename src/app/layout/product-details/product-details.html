@@ -1,0 +1,131 @@
+<app-navbar></app-navbar>
+
+<div *ngIf="product as p" class="bg-[var(--mauve-light)] min-h-screen p-4 md:p-6 lg:p-10">
+
+  <!-- Product Card -->
+  <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 bg-white rounded-3xl shadow-lg p-6 md:p-10 transition-transform hover:scale-[1.01]">
+
+    <!-- Gallery -->
+    <div>
+      <img
+        [src]="selectedImage"
+        class="w-full h-64 md:h-96 object-contain product-card rounded-3xl shadow-inner
+               transition-transform duration-500 hover:scale-105"
+      />
+    </div>
+
+    <!-- Info -->
+    <div class="flex flex-col justify-between mt-4 md:mt-0">
+      <!-- Category -->
+      <p class="uppercase tracking-widest text-sm text-[var(--taupe)] mb-2 font-medium">
+        {{ typeof p.category === 'string' ? p.category : p.category.name }}
+      </p>
+
+      <!-- Title -->
+      <h1 class="text-3xl md:text-4xl font-extrabold text-[var(--mauve-dark)] mb-4">
+        {{ p.name }}
+      </h1>
+
+      <!-- Rating -->
+      <div class="flex items-center gap-1 mb-4">
+        <ng-container *ngFor="let star of starsArray(p.ratingsAverage)">
+          <i class="fa-solid fa-star"
+             [class.text-[var(--peach-soft)]]="star"
+             [class.text-gray-300]="!star"></i>
+        </ng-container>
+        <span class="ml-2 text-sm text-[var(--taupe)]">
+          ({{ p.ratingsAverage || 0 }})
+        </span>
+      </div>
+
+      <!-- Price -->
+      <p class="text-2xl md:text-3xl font-bold text-[var(--peach-soft)] mb-4">
+        ${{ p.price }}
+      </p>
+
+      <!-- Stock Status -->
+      <p *ngIf="p.stock <= 3 && p.stock > 0" class="text-red-600 font-semibold mb-2">
+        Hurry! Only {{ p.stock }} items left.
+      </p>
+      <p *ngIf="p.stock === 0" class="text-gray-500 font-semibold mb-2">
+        This product is out of stock ❌
+      </p>
+
+      <!-- Description -->
+      <p class="text-[var(--mauve-dark)] leading-relaxed mb-6">
+        {{ p.description }}
+      </p>
+
+      <!-- Actions -->
+      <div class="flex flex-col sm:flex-row gap-4">
+        <button
+          (click)="addToCart(p)"
+          [disabled]="p.stock === 0"
+          class="flex-1 py-3 rounded-3xl font-semibold shadow-lg
+                 bg-gradient-to-r from-[var(--peach-soft)] to-[var(--mauve-dark)] text-white
+                 disabled:from-gray-300 disabled:to-gray-300 disabled:text-gray-600 transition-all hover:scale-[1.02]">
+          {{ p.stock === 0 ? 'Out of Stock' : 'Add to Cart' }}
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Reviews Section -->
+  <div class="max-w-6xl mx-auto mt-10 bg-white rounded-3xl shadow-lg p-6 md:p-10">
+
+    <h2 class="text-2xl md:text-3xl font-bold text-[var(--mauve-dark)] mb-6">Customer Reviews</h2>
+
+    <!-- Reviews List -->
+    <div *ngIf="product.reviews?.length; else noReviews" class="space-y-6">
+      <div *ngFor="let review of product.reviews" class="border-b border-[var(--rose-gray)] pb-4">
+        <div class="flex items-center gap-2 mb-1 flex-wrap">
+          <span class="font-semibold text-[var(--mauve-dark)]">{{ review.user }}</span>
+          <ng-container *ngFor="let star of starsArray(review.rating)">
+            <i class="fa-solid fa-star"
+               [class.text-[var(--peach-soft)]]="star"
+               [class.text-gray-300]="!star"></i>
+          </ng-container>
+          <span class="ml-2 text-sm text-[var(--taupe)]">{{ review.date | date:'mediumDate' }}</span>
+        </div>
+        <p class="text-[var(--mauve-dark)]">{{ review.comment }}</p>
+      </div>
+    </div>
+
+    <ng-template #noReviews>
+      <p class="text-[var(--taupe)] italic">No reviews yet. Be the first to review this product ⭐</p>
+    </ng-template>
+
+    <!-- Add Review Form -->
+    <div class="mt-8">
+      <h3 class="text-xl md:text-2xl font-bold mb-4 text-[var(--mauve-dark)]">Add a Review</h3>
+      <form (ngSubmit)="addReview()" class="flex flex-col gap-4">
+        <input type="text" placeholder="Your Name" [(ngModel)]="newReviewUser" name="user"
+               class="border border-[var(--rose-gray)] rounded-3xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--peach-soft)]" />
+
+        <textarea placeholder="Your Comment" [(ngModel)]="newReviewComment" name="comment"
+                  class="border border-[var(--rose-gray)] rounded-3xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--peach-soft)] resize-none"></textarea>
+
+ <!-- Star Rating -->
+<div class="flex items-center gap-2 text-2xl">
+  <span *ngFor="let star of [1,2,3,4,5]" 
+        (click)="newReviewRating = star"
+        class="cursor-pointer transition-all"
+        [ngStyle]="{'color': star <= newReviewRating ? 'var(--peach-soft)' : '#d1d5db'}">
+    ★
+  </span>
+</div>
+
+
+        <button type="submit"
+                [disabled]="!newReviewUser || !newReviewComment"
+                class="w-full py-3 rounded-3xl font-semibold bg-gradient-to-r from-[var(--peach-soft)] to-[var(--mauve-dark)] text-white shadow-lg disabled:bg-gray-300 disabled:text-gray-600">
+          Submit Review
+        </button>
+      </form>
+    </div>
+
+  </div>
+</div>
+
+<app-footer></app-footer>

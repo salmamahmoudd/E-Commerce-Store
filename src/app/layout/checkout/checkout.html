@@ -1,0 +1,42 @@
+<div class="min-h-screen bg-[var(--mauve-light)] flex justify-center items-center p-4 md:p-6 lg:p-10">
+
+  <div class="product-card rounded-3xl shadow-2xl p-6 md:p-10 w-full max-w-md transition-all">
+
+    <h2 class="text-3xl md:text-4xl font-extrabold text-[var(--mauve-dark)] mb-8 text-center">
+      Checkout 🛒
+    </h2>
+
+    <!-- Form Inputs -->
+    <div class="flex flex-col gap-4 md:gap-5">
+      <input [(ngModel)]="name" placeholder="Full Name"
+             class="border border-[var(--rose-gray)] rounded-2xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--peach-soft)] transition shadow-sm"/>
+      <input [(ngModel)]="address" placeholder="Address"
+             class="border border-[var(--rose-gray)] rounded-2xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--peach-soft)] transition shadow-sm"/>
+      <input [(ngModel)]="phone" placeholder="Phone Number"
+             class="border border-[var(--rose-gray)] rounded-2xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--peach-soft)] transition shadow-sm"/>
+    </div>
+
+    <!-- Total -->
+    <div class="text-right mt-6 text-2xl md:text-3xl font-extrabold text-[var(--mauve-dark)]">
+      Total: ${{ total }}
+    </div>
+
+    <!-- Place Order Button -->
+    <button (click)="placeOrder()"
+            [disabled]="cartItems.length === 0 || !name || !address || !phone || hasOutOfStock()"
+            class="mt-6 w-full py-3 rounded-2xl font-bold
+                   bg-[var(--peach-soft)] text-[var(--mauve-light)]
+                   hover:bg-[var(--mauve-dark)]
+                   disabled:bg-gray-300 disabled:text-gray-600 disabled:cursor-not-allowed
+                   transition transform hover:scale-105 shadow-md flex items-center justify-center gap-2">
+      <i class="fa-solid fa-credit-card"></i> Place Order
+    </button>
+
+    <!-- View Orders Link -->
+    <a routerLink="/allorders"
+       class="mt-4 block text-center text-[var(--mauve-dark)] font-bold hover:text-[var(--peach-soft)] hover:underline transition">
+      View All Orders
+    </a>
+
+  </div>
+</div>

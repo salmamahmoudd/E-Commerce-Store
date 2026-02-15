@@ -1,0 +1,64 @@
+<app-auth-navbar></app-auth-navbar>
+
+<div class="auth-page">
+  <form
+    [formGroup]="loginForm"
+    (ngSubmit)="login()"
+    class="auth-card"
+  >
+
+    <h2 class="auth-title">Login</h2>
+
+    <!-- Email -->
+    <div class="relative">
+      <input
+        type="email"
+        placeholder="Email"
+        formControlName="email"
+        class="auth-input w-full"
+      />
+      <i class="fa-solid fa-envelope auth-icon"></i>
+
+      <p *ngIf="email?.touched && email?.invalid" class="auth-error">
+        {{ email?.errors?.['required'] ? 'Email is required' : 'Invalid email' }}
+      </p>
+    </div>
+
+    <!-- Password -->
+    <div class="relative">
+      <input
+        type="password"
+        placeholder="Password"
+        formControlName="password"
+        class="auth-input w-full"
+      />
+      <i class="fa-solid fa-lock auth-icon"></i>
+
+<p *ngIf="password?.touched && password?.invalid" class="auth-error">
+  {{ password?.errors?.['required'] ? 'Password is required' : 'Password must be at least 6 characters' }}
+</p>
+
+    </div>
+
+    <!-- General Error -->
+    <p *ngIf="error" class="auth-error text-center">{{ error }}</p>
+
+    <!-- Submit Button -->
+    <button
+      type="submit"
+      [disabled]="loginForm.invalid"
+      class="btn-primary w-full"
+    >
+      Login
+    </button>
+
+    <!-- Register Link -->
+    <p class="text-center text-sm text-gray-600 mt-2">
+      Don't have an account?
+<a routerLink="/register" class="auth-link">Register</a>
+    </p>
+
+  </form>
+</div>
+
+<app-footer></app-footer>

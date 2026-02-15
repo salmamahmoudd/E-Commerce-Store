@@ -1,0 +1,56 @@
+<div class="p-4 md:p-6 lg:p-10 bg-[var(--mauve-light)] min-h-screen">
+
+  <h2 class="text-3xl md:text-4xl font-extrabold text-[var(--mauve-dark)] mb-6 text-center">
+    Admin - All Orders 🛒
+  </h2>
+
+  <!-- Orders Grid -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div *ngFor="let order of filteredOrders"
+         class="bg-[var(--mauve-light)] rounded-3xl shadow-md p-5 md:p-6 flex flex-col gap-4 hover:shadow-xl transition">
+
+      <!-- Header -->
+      <div class="flex justify-between text-sm text-[var(--taupe)] flex-wrap gap-2">
+        <span>Order ID: {{ order._id }}</span>
+        <span>{{ formatDate(order.createdAt) }}</span>
+      </div>
+
+      <!-- Products List -->
+      <div class="flex flex-col gap-3 mt-3">
+        <div *ngFor="let item of order.items" class="flex items-center gap-3">
+          <img [src]="item.image" alt="{{item.name}}"
+               class="w-16 h-16 object-cover rounded-lg shadow-sm border border-[var(--rose-gray)]"/>
+          <div>
+            <div class="font-semibold text-[var(--peach-soft)]">{{ item.name }}</div>
+            <div class="text-sm text-[var(--taupe)]">Qty: {{ item.quantity }}</div>
+            <div class="text-sm text-[var(--taupe)]">Price: ${{ item.price }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Total + Actions -->
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-4 pt-4 border-t border-[var(--rose-gray)] gap-3">
+        <div class="font-bold text-lg text-[var(--peach-soft)]">Total: ${{ getTotal(order.items) }}</div>
+
+        <div class="flex flex-wrap gap-2">
+          <button *ngIf="order.status==='pending'" (click)="deliverOrder(order)"
+                  class="bg-[var(--peach-soft)] hover:bg-[var(--mauve-dark)] text-white px-3 py-1 rounded-xl font-semibold transition">Deliver</button>
+          <button *ngIf="order.status==='pending'" (click)="cancelByAdmin(order)"
+                  class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-xl font-semibold transition">Cancel</button>
+
+          <span [ngClass]="{
+            'bg-yellow-200 text-yellow-900': order.status==='pending',
+            'bg-green-200 text-green-900': order.status==='cash-paid',
+            'bg-green-500 text-white': order.status==='delivered',
+            'bg-red-300 text-red-900': order.status==='cancelled_by_user',
+            'bg-red-500 text-white': order.status==='cancelled_by_admin',
+            'bg-blue-200 text-blue-900': order.status==='refund_requested'
+          }"
+          class="px-3 py-1 rounded-full text-sm font-semibold">
+            {{ order.status }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

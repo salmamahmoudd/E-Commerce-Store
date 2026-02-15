@@ -1,0 +1,23 @@
+<div class="profile-card" *ngIf="user">
+  <div class="profile-header">
+    <img [src]="userImage" class="profile-img" alt="Profile Picture" />
+    <h2 class="profile-name">{{ user.name }}</h2>
+  </div>
+
+  <div class="profile-form">
+    <label class="file-label">
+      Upload Profile Image
+      <input type="file" (change)="onFileChange($event)" />
+    </label>
+
+    <input [(ngModel)]="user.name" placeholder="Name" class="auth-input" />
+    <input [(ngModel)]="user.phone" placeholder="Phone" disabled class="auth-input disabled" />
+    <input [value]="user.email" disabled class="auth-input disabled" />
+
+    <input [(ngModel)]="user.address.governorate" placeholder="Governorate" class="auth-input" />
+    <input [(ngModel)]="user.address.city" placeholder="City" class="auth-input" />
+    <input [(ngModel)]="user.address.street" placeholder="Street" class="auth-input" />
+
+    <button (click)="updateProfile()" class="btn-primary full">Save Changes</button>
+  </div>
+</div>

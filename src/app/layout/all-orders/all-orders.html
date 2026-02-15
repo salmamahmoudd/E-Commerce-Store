@@ -1,0 +1,124 @@
+<div class="p-4 md:p-6 lg:p-10 bg-[var(--mauve-light)] min-h-screen flex flex-col items-center">
+
+  <h2 class="text-3xl md:text-4xl font-extrabold text-[var(--mauve-dark)] mb-6 text-center">
+    All Orders 🛒
+  </h2>
+
+  <!-- Filters -->
+  <div class="mb-6 flex flex-wrap gap-3 justify-center">
+    <button (click)="setFilter('all')" 
+            class="px-4 py-2 rounded-2xl transition"
+            [ngClass]="statusFilter==='all' ? 'bg-[var(--peach-soft)] text-white font-bold' : 'bg-white text-[var(--mauve-dark)] hover:bg-[var(--peach-soft)] hover:text-white'">
+      All
+    </button>
+
+    <button (click)="setFilter('pending')" 
+            class="px-4 py-2 rounded-2xl transition"
+            [ngClass]="statusFilter==='pending' ? 'bg-[var(--peach-soft)] text-white font-bold' : 'bg-yellow-200 text-[var(--mauve-dark)] hover:bg-yellow-300'">
+      Pending
+    </button>
+
+    <button (click)="setFilter('cash-paid')" 
+            class="px-4 py-2 rounded-2xl transition"
+            [ngClass]="statusFilter==='cash-paid' ? 'bg-[var(--peach-soft)] text-white font-bold' : 'bg-green-200 text-[var(--mauve-dark)] hover:bg-green-300'">
+      Cash Paid
+    </button>
+
+    <button (click)="setFilter('delivered')" 
+            class="px-4 py-2 rounded-2xl transition"
+            [ngClass]="statusFilter==='delivered' ? 'bg-[var(--peach-soft)] text-white font-bold' : 'bg-green-500 text-white hover:bg-green-600'">
+      Delivered
+    </button>
+
+    <button (click)="setFilter('cancelled_by_user')" 
+            class="px-4 py-2 rounded-2xl transition"
+            [ngClass]="statusFilter==='cancelled_by_user' ? 'bg-[var(--peach-soft)] text-white font-bold' : 'bg-red-400 text-white hover:bg-red-500'">
+      Cancelled
+    </button>
+
+    <button (click)="setFilter('refund_requested')" 
+            class="px-4 py-2 rounded-2xl transition"
+            [ngClass]="statusFilter==='refund_requested' ? 'bg-[var(--peach-soft)] text-white font-bold' : 'bg-blue-300 text-[var(--mauve-dark)] hover:bg-blue-400'">
+      Refund Requested
+    </button>
+  </div>
+
+  <!-- Orders List -->
+  <div class="w-full max-w-6xl flex flex-col gap-6">
+
+    <div *ngFor="let order of filteredOrders" 
+         class="bg-white rounded-3xl shadow-md p-5 md:p-6 flex flex-col gap-4 
+                transition-transform duration-300 hover:scale-105 hover:shadow-xl">
+
+      <!-- Header -->
+      <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
+        <div class="text-sm text-[var(--taupe)] font-medium">Order ID: {{ order._id }}</div>
+        <div class="text-sm text-[var(--taupe)]">{{ formatDate(order.createdAt) }}</div>
+      </div>
+
+      <!-- Products -->
+      <div class="flex flex-col gap-4">
+        <div *ngFor="let item of order.items" class="flex items-center gap-4">
+          <img [src]="item.image" alt="{{item.name}}" class="w-20 h-20 object-cover rounded-xl shadow-sm border border-[var(--rose-gray)]"/>
+          <div class="flex-1">
+            <div class="font-semibold text-[var(--mauve-dark)]">{{ item.name }}</div>
+            <div class="text-sm text-[var(--taupe)]">Qty: {{ item.quantity }}</div>
+            <div class="text-sm text-[var(--taupe)]">Price: ${{ item.price }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Total + Actions -->
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-4 pt-4 border-t border-[var(--rose-gray)] gap-2">
+
+        <div class="font-bold text-xl text-[var(--mauve-dark)]">Total: ${{ getTotal(order.items) }}</div>
+
+        <div class="flex flex-wrap gap-2">
+
+          <!-- Action Buttons -->
+          <button *ngIf="order.status==='pending' && !isAdmin" 
+                  (click)="payCash(order)" 
+                  class="bg-[var(--peach-soft)] text-white px-4 py-2 rounded-lg font-semibold hover:bg-[var(--mauve-dark)] transition">
+            Pay Cash
+          </button>
+
+          <button *ngIf="order.status==='pending' && isAdmin" 
+                  (click)="deliverOrder(order)" 
+                  class="bg-[var(--peach-soft)] text-white px-4 py-2 rounded-lg font-semibold hover:bg-[var(--mauve-dark)] transition">
+            Deliver
+          </button>
+
+          <button *ngIf="order.status==='pending' && !isAdmin" 
+                  (click)="cancelByUser(order)" 
+                  class="bg-red-400 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-500 transition">
+            Cancel
+          </button>
+
+          <button *ngIf="canRefund(order)" 
+                  (click)="requestRefund(order)" 
+                  class="bg-blue-300 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-400 transition">
+            Refund Request
+          </button>
+
+          <!-- Status Badge -->
+          <span [ngClass]="{
+            'bg-yellow-300 text-yellow-900': order.status==='pending',
+            'bg-green-300 text-green-900': order.status==='cash-paid',
+            'bg-green-500 text-white': order.status==='delivered',
+            'bg-red-300 text-red-900': order.status==='cancelled_by_user',
+            'bg-red-500 text-white': order.status==='cancelled_by_admin',
+            'bg-blue-300 text-blue-900': order.status==='refund_requested'
+          }" class="px-3 py-1 rounded-full text-sm font-semibold">
+            {{ order.status }}
+          </span>
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<app-footer></app-footer>

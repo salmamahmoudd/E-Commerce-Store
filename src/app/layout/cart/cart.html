@@ -1,0 +1,94 @@
+<app-navbar></app-navbar>
+
+<div class="min-h-screen bg-[var(--mauve-light)] p-4 md:p-6 lg:p-10">
+
+  <h2 class="text-3xl md:text-4xl font-extrabold text-[var(--mauve-dark)] mb-8 text-center">
+    Your Cart 🛒
+  </h2>
+
+  <!-- Empty Cart -->
+  <div *ngIf="cartItems.length === 0"
+       class="text-center text-lg md:text-xl text-[var(--taupe)] font-semibold py-20">
+    Your cart is empty. Start adding some items! ✨
+  </div>
+
+  <!-- Cart Items -->
+  <div *ngFor="let item of cartItems"
+       class="bg-white rounded-3xl shadow-md p-4 md:p-6 mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:shadow-xl transition-all">
+
+    <!-- Product Info -->
+    <div class="flex items-center gap-4 flex-1">
+      <img [src]="item.image"
+           class="w-24 h-24 md:w-28 md:h-28 object-contain rounded-2xl border border-[var(--rose-gray)] p-2 bg-[var(--mauve-light)]"/>
+
+      <div>
+        <h3 class="font-bold text-lg md:text-xl text-[var(--mauve-dark)]">
+          {{ item.name }}
+        </h3>
+        <p class="text-[var(--peach-soft)] font-semibold text-md md:text-lg mt-1">
+          ${{ item.price }}
+        </p>
+        <p *ngIf="item.stock === 0" class="text-red-600 text-sm font-bold mt-1">
+          This product is out of stock ❌
+        </p>
+      </div>
+    </div>
+
+    <!-- Quantity -->
+    <div class="flex items-center gap-3 mt-3 md:mt-0">
+      <button
+        (click)="decrease(item._id)"
+        class="w-10 h-10 flex justify-center items-center bg-[var(--mauve-light)] rounded-lg font-bold text-xl
+               hover:bg-[var(--taupe)] transition transform hover:scale-110">
+        <i class="fa-solid fa-minus"></i>
+      </button>
+
+      <span class="font-bold text-lg text-[var(--mauve-dark)]">{{ item.quantity }}</span>
+
+      <button
+        (click)="increase(item._id)"
+        class="w-10 h-10 flex justify-center items-center bg-[var(--mauve-light)] rounded-lg font-bold text-xl
+               hover:bg-[var(--taupe)] transition transform hover:scale-110">
+        <i class="fa-solid fa-plus"></i>
+      </button>
+    </div>
+
+    <!-- Remove -->
+    <button
+      (click)="remove(item._id)"
+      class="text-red-600 font-semibold hover:text-red-500 hover:underline mt-3 md:mt-0 flex items-center gap-1">
+      <i class="fa-solid fa-trash"></i> Remove
+    </button>
+
+  </div>
+
+  <!-- Total & Actions -->
+  <div *ngIf="cartItems.length > 0" class="flex flex-col md:flex-row justify-between items-center mt-8 gap-4">
+
+    <p class="text-2xl md:text-3xl font-extrabold text-[var(--mauve-dark)]">
+      Total: ${{ total }}
+    </p>
+
+    <div class="flex flex-col md:flex-row gap-4 w-full md:w-auto">
+
+      <button
+        (click)="clearCart()"
+        class="px-6 py-3 bg-red-500 text-white rounded-2xl font-bold shadow-md
+               hover:bg-red-600 transition transform hover:scale-105 flex items-center gap-2 justify-center w-full md:w-auto">
+        <i class="fa-solid fa-trash-can"></i> Clear Cart
+      </button>
+
+      <a 
+        routerLink="/checkout"
+        [class.pointer-events-none]="cartItems.length === 0"
+        class="block text-center bg-[var(--peach-soft)] text-white py-3 rounded-2xl font-bold hover:bg-[var(--mauve-dark)]
+               transition transform hover:scale-105 w-full md:w-auto flex items-center justify-center gap-2">
+        <i class="fa-solid fa-credit-card"></i> Checkout
+      </a>
+
+    </div>
+  </div>
+
+</div>
+
+<app-footer></app-footer>

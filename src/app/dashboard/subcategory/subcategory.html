@@ -1,0 +1,49 @@
+<div class="p-6 bg-[var(--rose-gray)] min-h-screen">
+
+  <h1 class="text-3xl font-bold text-[var(--mauve-dark)] mb-6">SubCategories Dashboard</h1>
+
+    <!-- Toasts -->
+  <div class="fixed top-5 right-5 z-50 space-y-3">
+    <div *ngFor="let toast of toasts"
+         [ngClass]="{
+           'bg-green-500': toast.type === 'success',
+           'bg-red-500': toast.type === 'error'
+         }"
+         class="text-white px-5 py-3 rounded-lg shadow-lg font-semibold">
+      {{ toast.message }}
+    </div>
+  </div>
+
+  <div class="dashboard-card mb-8 p-4 bg-[var(--mauve-light)] rounded-xl shadow-md flex flex-wrap gap-4">
+    <select [(ngModel)]="selectedCategoryId" (change)="onCategoryChange()"
+            class="flex-1 px-4 py-3 rounded-lg border border-[var(--taupe)] focus:outline-none focus:ring-2 focus:ring-[var(--peach-soft)]">
+      <option value="">Select Category</option>
+      <option *ngFor="let cat of categories" [value]="cat._id">{{ cat.name }}</option>
+    </select>
+
+    <input [(ngModel)]="newSubCategory.name" placeholder="SubCategory Name"
+           class="flex-1 px-4 py-3 rounded-lg border border-[var(--taupe)] focus:outline-none focus:ring-2 focus:ring-[var(--peach-soft)]" />
+
+    <input type="file" (change)="onFileSelected($event)"
+           class="flex-1 px-4 py-3 rounded-lg border border-[var(--taupe)] focus:outline-none focus:ring-2 focus:ring-[var(--peach-soft)]" />
+
+    <input [(ngModel)]="searchTerm" placeholder="Search subcategories..."
+           class="flex-1 px-4 py-3 rounded-lg border border-[var(--taupe)] focus:outline-none focus:ring-2 focus:ring-[var(--peach-soft)]" />
+
+    <button (click)="saveSubCategory()" class="btn-primary">{{ editMode ? 'Update' : 'Add' }}</button>
+  </div>
+
+  <!-- Subcategories Grid -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <div *ngFor="let sub of paginatedSubCategories()"
+         class="bg-[var(--mauve-light)] p-4 rounded-xl shadow-md flex flex-col hover:shadow-lg transition">
+      <img *ngIf="sub.image" [src]="sub.image" class="h-40 object-contain mb-3 rounded-lg" />
+      <h3 class="text-lg font-semibold">{{ sub.name }}</h3>
+      <p class="text-[var(--taupe)] text-sm">Category: {{ sub.category.name }}</p>
+      <div class="mt-auto flex gap-2">
+        <button (click)="editSubCategory(sub)" class="btn-primary flex-1">Edit</button>
+        <button (click)="deleteSubCategory(sub._id!)" class="btn-signout flex-1">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>

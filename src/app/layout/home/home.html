@@ -1,0 +1,233 @@
+<app-navbar></app-navbar>
+
+<div class="bg-[var(--mauve-light)] min-h-screen p-4 md:p-6 lg:p-10">
+
+  <!-- Filters & Search -->
+  <div class="flex flex-col md:flex-row gap-4 mb-8 items-center justify-between">
+    <!-- Search -->
+    <input
+      [(ngModel)]="searchTerm"
+      (input)="filterProducts()"
+      type="text"
+      placeholder="Search for products…"
+      class="w-full md:w-1/3 px-4 md:px-6 py-3 md:py-4 rounded-2xl
+             bg-white border border-[var(--rose-gray)]
+             text-[var(--mauve-dark)]
+             placeholder:text-[var(--taupe)]
+             shadow-sm
+             hover:shadow-lg hover:border-[var(--peach-soft)]
+             focus:outline-none focus:ring-2 focus:ring-[var(--peach-soft)]
+             transition-all duration-500"
+    />
+
+    <!-- Category Filter -->
+    <select
+      [(ngModel)]="selectedCategory"
+      (change)="onCategoryChange()"
+      class="w-full md:w-1/4 px-4 md:px-6 py-3 md:py-4 rounded-2xl
+             bg-white border border-[var(--rose-gray)]
+             text-[var(--mauve-dark)]
+             shadow-sm
+             hover:shadow-lg hover:border-[var(--peach-soft)]
+             focus:outline-none focus:ring-2 focus:ring-[var(--peach-soft)]
+             transition-all duration-500 cursor-pointer"
+    >
+      <option value="">Select Category</option>
+      <option *ngFor="let cat of categories" [value]="cat._id">{{ cat.name }}</option>
+    </select>
+
+    <!-- Subcategory Filter -->
+    <select
+      [(ngModel)]="selectedSubCategory"
+      (change)="filterProducts()"
+      *ngIf="subCategories.length > 0"
+      class="w-full md:w-1/4 px-4 md:px-6 py-3 md:py-4 rounded-2xl
+             bg-white border border-[var(--rose-gray)]
+             text-[var(--mauve-dark)]
+             shadow-sm
+             hover:shadow-lg hover:border-[var(--peach-soft)]
+             focus:outline-none focus:ring-2 focus:ring-[var(--peach-soft)]
+             transition-all duration-500 cursor-pointer"
+    >
+      <option value="">Select Subcategories</option>
+      <option *ngFor="let sub of subCategories" [value]="sub._id">{{ sub.name }}</option>
+    </select>
+
+    <!-- Sort -->
+    <select
+      [(ngModel)]="sortPriceOrder"
+      (change)="filterProducts()"
+      class="w-full md:w-1/4 px-4 md:px-6 py-3 md:py-4 rounded-2xl
+             bg-white border border-[var(--rose-gray)]
+             text-[var(--mauve-dark)]
+             shadow-sm
+             hover:shadow-lg hover:border-[var(--peach-soft)]
+             focus:outline-none focus:ring-2 focus:ring-[var(--peach-soft)]
+             transition-all duration-500 cursor-pointer"
+    >
+      <option value="">Sort by Price</option>
+      <option value="asc">Low to High</option>
+      <option value="desc">High to Low</option>
+    </select>
+  </div>
+
+  <!-- Featured Products -->
+  <section class="py-8 md:py-12 bg-white rounded-3xl shadow-lg mb-12">
+    <div class="container mx-auto px-4 md:px-6">
+      <h2 class="text-2xl md:text-3xl lg:text-4xl font-bold text-center mb-8 md:mb-12 text-[var(--mauve-dark)]">
+        Featured Products
+      </h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
+        <div *ngFor="let product of featuredProducts" [routerLink]="['/product', product._id]"
+             class="relative bg-[var(--mauve-light)] rounded-3xl shadow-md hover:shadow-2xl transition-all duration-500
+                    p-4 md:p-5 flex flex-col justify-between cursor-pointer group hover:-translate-y-2 hover:scale-105">
+
+          <!-- Featured Badge -->
+
+
+          <div class="bg-white rounded-2xl mb-4 p-3">
+            <img *ngIf="product.image" [src]="product.image" alt="{{ product.name }}"
+                 class="w-full h-48 md:h-56 object-contain transition-transform duration-500 group-hover:scale-110"/>
+          </div>
+
+          <div>
+            <p class="text-xs md:text-sm text-[var(--taupe)] font-semibold uppercase mb-1">
+              {{ typeof product.category === 'string' ? getCategoryName(product.category) : product.category.name }}
+            </p>
+            <h3 class="text-sm md:text-lg font-bold text-[var(--mauve-dark)] mb-2">{{ product.name }}</h3>
+
+            <div class="flex items-center justify-between mb-3 md:mb-4 flex-wrap gap-2">
+              <p class="font-bold text-[var(--peach-soft)] text-base md:text-lg">${{ product.price }}</p>
+
+              <p *ngIf="product.stock > 0 && product.stock <= 3" class="text-xs md:text-sm text-red-600 font-bold animate-pulse">
+                Only {{ product.stock }} left 🔥
+              </p>
+              <p *ngIf="product.stock === 0" class="text-xs md:text-sm text-gray-500 font-bold">
+                Out of Stock ❌
+              </p>
+
+              <p class="flex items-center gap-1">
+                <ng-container *ngFor="let star of starsArray(product.ratingsAverage)">
+                  <i class="fa-solid" [ngClass]="star ? 'fa-star text-yellow-400' : 'fa-star text-gray-300'"></i>
+                </ng-container>
+              </p>
+            </div>
+          </div>
+
+          <button
+            (click)="$event.stopPropagation(); addToCart(product)"
+            [disabled]="product.stock === 0"
+            class="w-full py-3 rounded-full font-semibold shadow-md transition bg-[var(--peach-soft)] text-white hover:bg-[var(--mauve-dark)] disabled:bg-gray-300 disabled:cursor-not-allowed disabled:opacity-50">
+            {{ product.stock === 0 ? 'Out of Stock' : 'Add to Cart' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Products Grid -->
+  <section id="products-section" class="mb-12">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
+      <div *ngFor="let product of paginatedProducts()" [routerLink]="['/product', product._id]"
+           class="relative bg-white rounded-3xl shadow-md hover:shadow-2xl transition-all duration-500 p-4 md:p-5 flex flex-col justify-between cursor-pointer group hover:-translate-y-2 hover:scale-105">
+
+        <!-- Featured Badge -->
+
+
+        <div class="bg-[var(--mauve-light)] rounded-2xl mb-4 p-3">
+          <img *ngIf="product.image" [src]="product.image" alt="{{ product.name }}"
+               class="w-full h-48 md:h-56 object-contain transition-transform duration-500 group-hover:scale-110"/>
+        </div>
+
+        <div>
+          <p class="text-xs md:text-sm text-[var(--taupe)] font-semibold uppercase mb-1">
+            {{ typeof product.category === 'string' ? getCategoryName(product.category) : product.category.name }}
+          </p>
+          <h3 class="text-sm md:text-lg font-bold text-[var(--mauve-dark)] mb-2">{{ product.name }}</h3>
+
+          <div class="flex items-center justify-between mb-3 md:mb-4 flex-wrap gap-2">
+            <p class="font-bold text-[var(--peach-soft)] text-base md:text-lg">${{ product.price }}</p>
+
+            <p *ngIf="product.stock > 0 && product.stock <= 3" class="text-xs md:text-sm text-red-600 font-bold animate-pulse">
+              Only {{ product.stock }} left 🔥
+            </p>
+            <p *ngIf="product.stock === 0" class="text-xs md:text-sm text-gray-500 font-bold">
+              Out of Stock ❌
+            </p>
+
+            <p class="flex items-center gap-1">
+              <ng-container *ngFor="let star of starsArray(product.ratingsAverage)">
+                <i class="fa-solid" [ngClass]="star ? 'fa-star text-yellow-400' : 'fa-star text-gray-300'"></i>
+              </ng-container>
+            </p>
+          </div>
+        </div>
+
+        <button (click)="$event.stopPropagation(); addToCart(product)"
+                [disabled]="product.stock === 0"
+                class="w-full py-3 rounded-full font-semibold shadow-md transition bg-[var(--peach-soft)] text-white hover:bg-[var(--mauve-dark)] disabled:bg-gray-300 disabled:cursor-not-allowed disabled:opacity-50">
+          Add to Cart
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials Section -->
+  <section class="py-12 bg-[var(--mauve-light)] rounded-3xl shadow-lg mb-12">
+    <div class="container mx-auto px-4 md:px-6">
+      <h2 class="text-2xl md:text-3xl lg:text-4xl font-bold text-center mb-8 md:mb-12 text-[var(--mauve-dark)]">
+        What Our Customers Say
+      </h2>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8 mb-8">
+        <div *ngFor="let t of testimonials" class="bg-white p-4 md:p-6 rounded-2xl shadow-md hover:shadow-2xl transition-all duration-500 hover:-translate-y-1 hover:scale-105">
+          <div class="flex items-center gap-3 md:gap-4 mb-3 md:mb-4">
+            <img *ngIf="t.userId?.image" [src]="'http://localhost:3000/uploads/' + t.userId.image" alt="{{ t.userId?.name }}" class="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover"/>
+            <h4 class="font-semibold text-sm md:text-base">{{ t.userId?.name || 'Anonymous' }}</h4>
+          </div>
+          <p class="text-[var(--taupe)] text-sm md:text-base mb-2">{{ t.comment }}</p>
+          <div class="flex gap-1">
+            <ng-container *ngFor="let star of starsArray(t.rating)">
+              <i class="fa-solid" [ngClass]="star ? 'fa-star text-yellow-400' : 'fa-star text-gray-300'"></i>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+
+      <!-- Testimonial Form -->
+      <form (ngSubmit)="submitTestimonial()" class="max-w-xl mx-auto bg-white p-4 md:p-6 rounded-2xl shadow-md flex flex-col gap-3 md:gap-4">
+        <label class="font-semibold text-sm md:text-base">Rating:</label>
+        <select [(ngModel)]="newTestimonial.rating" name="rating" required
+                class="px-3 py-2 md:px-4 md:py-3 border border-[var(--rose-gray)] rounded-2xl focus:ring-2 focus:ring-[var(--peach-soft)] transition-all duration-300">
+          <option value="" disabled selected>Select rating</option>
+          <option *ngFor="let r of [1,2,3,4,5]" [value]="r">{{ r }} Star{{ r > 1 ? 's' : '' }}</option>
+        </select>
+
+        <label class="font-semibold text-sm md:text-base">Comment:</label>
+        <textarea [(ngModel)]="newTestimonial.comment" name="comment" required rows="4"
+                  placeholder="Write your testimonial..."
+                  class="px-3 py-2 md:px-4 md:py-3 border border-[var(--rose-gray)] rounded-2xl focus:ring-2 focus:ring-[var(--peach-soft)] transition-all duration-300 resize-none"></textarea>
+
+        <button type="submit" class="w-full py-3 md:py-3 rounded-full font-semibold shadow-md bg-[var(--peach-soft)] text-white hover:bg-[var(--mauve-dark)] transition-all duration-300">
+          Submit Testimonial
+        </button>
+
+        <p *ngIf="testimonialMessage" [ngClass]="{'text-green-600': testimonialSuccess, 'text-red-600': !testimonialSuccess}" class="text-center mt-2 text-sm md:text-base">
+          {{ testimonialMessage }}
+        </p>
+      </form>
+    </div>
+  </section>
+
+  <!-- Pagination -->
+  <div class="flex flex-wrap justify-center mt-8 gap-3 md:mt-10">
+    <button *ngFor="let page of totalPagesArray()" (click)="goToPage(page)"
+            [ngClass]="{'bg-[var(--peach-soft)] text-white': currentPage === page, 'bg-white text-[var(--mauve-dark)] hover:bg-[var(--rose-gray)]': currentPage !== page}"
+            class="px-4 md:px-5 py-2 rounded-full shadow-sm transition text-sm md:text-base">
+      {{ page }}
+    </button>
+  </div>
+
+</div>
+
+<app-footer></app-footer>

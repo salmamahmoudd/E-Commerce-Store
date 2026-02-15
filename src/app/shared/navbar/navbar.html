@@ -1,0 +1,126 @@
+<!-- Toast Message -->
+<div
+  *ngIf="(toastService.toast$ | async) as toast"
+  class="fixed bottom-6 right-6 z-50 px-6 py-3 rounded-xl shadow-2xl text-white font-semibold transition-all duration-500 animate-toast"
+  [ngClass]="{
+    'bg-green-600': toast.type === 'success',
+    'bg-red-600': toast.type === 'error'
+  }"
+>
+  {{ toast.message }}
+</div>
+<!-- Navbar -->
+<nav class="navbar">
+  <div class="nav-wrapper container mx-auto flex justify-between items-center">
+
+    <!-- Logo -->
+    <div class="logo text-xl sm:text-2xl font-bold">Shop<span>Brand</span></div>
+
+    <!-- Desktop Links -->
+    <ul class="hidden md:flex gap-6 text-sm sm:text-base">
+      <li><a class="nav-link" routerLink="/">Home</a></li>
+      <li><a class="nav-link" routerLink="/products">Products</a></li>
+      <li><a class="nav-link" routerLink="/about">About</a></li>
+      <li><a class="nav-link" routerLink="/contact">Contact</a></li>
+    </ul>
+
+    <!-- Right Section -->
+    <div class="flex items-center gap-4">
+
+      <!-- Social Icons Desktop -->
+      <div class="hidden md:flex gap-3 social-icons">
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+      </div>
+
+      <!-- Cart -->
+      <a routerLink="/cart" class="relative">
+        <i class="fas fa-shopping-cart text-xl sm:text-2xl"></i>
+        <span *ngIf="cartCount > 0" class="cart-count">{{ cartCount }}</span>
+      </a>
+
+      <!-- Auth / Profile -->
+      <ng-container *ngIf="userName; else guest">
+        <div class="relative">
+          <img [src]="userImage || 'assets/user-placeholder.png'"
+               alt="User"
+               class="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-peach-soft cursor-pointer"
+               (click)="toggleProfilePanel()"
+          />
+        </div>
+      </ng-container>
+
+      <ng-template #guest>
+        <a routerLink="/login" class="btn-outline text-sm sm:text-base">Login</a>
+        <a routerLink="/register" class="btn-primary text-sm sm:text-base">Register</a>
+      </ng-template>
+
+      <!-- Mobile Hamburger -->
+      <div class="md:hidden cursor-pointer ml-2" (click)="toggleMenu()">
+        <span class="block w-6 h-0.5 bg-mauve-dark my-1"></span>
+        <span class="block w-6 h-0.5 bg-mauve-dark my-1"></span>
+        <span class="block w-6 h-0.5 bg-mauve-dark my-1"></span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <ul *ngIf="menuOpen" class="mobile-menu flex flex-col gap-3 mt-3 md:hidden">
+    <li><a routerLink="/">Home</a></li>
+    <li><a routerLink="/products">Products</a></li>
+    <li><a routerLink="/about">About</a></li>
+    <li><a routerLink="/contact">Contact</a></li>
+    <li *ngIf="userName">
+      <span class="font-semibold">{{ userName }}</span>
+      <button (click)="signOut()" class="btn-signout mt-1">Sign Out</button>
+    </li>
+    <li *ngIf="!userName">
+      <a routerLink="/login" class="btn-outline">Login</a>
+      <a routerLink="/register" class="btn-primary">Register</a>
+    </li>
+  </ul>
+</nav>
+
+<!-- Profile Panel Overlay -->
+<div
+  *ngIf="profilePanelOpen"
+  class="fixed inset-0 bg-black/40 z-40"
+  (click)="toggleProfilePanel()"
+></div>
+
+<!-- User Profile Slide Panel -->
+<div
+  class="fixed top-0 right-0 h-full w-80 sm:w-96 shadow-lg z-50 transform transition-transform duration-300 profile-panel"
+  [ngClass]="{'translate-x-0': profilePanelOpen, 'translate-x-full': !profilePanelOpen}"
+>
+  <div class="flex flex-col p-6 gap-4 h-full">
+
+    <!-- Header -->
+    <div class="flex justify-between items-center">
+      <h2 class="font-bold text-xl">Profile</h2>
+      <button (click)="toggleProfilePanel()" class="text-2xl">&times;</button>
+    </div>
+
+    <!-- User Info -->
+    <div class="flex flex-col items-center gap-2 mt-4">
+      <img 
+      [src]="userImage || 'assets/user-placeholder.png'" 
+      class="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover border-2 border-peach-soft cursor-pointer"
+      alt="User Profile" 
+      (click)="toggleProfilePanel()" 
+    />
+      <p class="font-semibold text-lg">{{ userName }}</p>
+      <small class="text-gray-700">{{ userEmail }}</small>
+    </div>
+
+    <!-- Links & Actions -->
+    <div class="flex flex-col gap-2 mt-6">
+      <a routerLink="/profile" class="btn-outline text-center w-full">My Profile</a>
+      <a routerLink="/allorders" class="btn-outline text-center w-full">My Orders</a>
+      <button (click)="signOut()" class="btn-signout w-full mt-auto">Sign Out</button>
+    </div>
+
+  </div>
+</div>

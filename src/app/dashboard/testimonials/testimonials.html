@@ -1,0 +1,21 @@
+<div class="p-6 bg-[var(--rose-gray)] min-h-screen">
+  <div *ngFor="let t of testimonials" class="bg-[var(--mauve-light)] p-6 rounded-2xl shadow-md mb-4">
+    <div class="flex items-center gap-3 mb-2">
+      <h4 class="font-semibold">{{ t.userId?.name || 'Anonymous' }}</h4>
+    </div>
+    <p class="text-[var(--taupe)] mb-3">{{ t.comment }}</p>
+    <div class="flex gap-1 mb-3">
+      <ng-container *ngFor="let star of starsArray(t.rating)">
+        <i class="fa-solid" [ngClass]="star ? 'fa-star text-yellow-400' : 'fa-star text-gray-300'"></i>
+      </ng-container>
+    </div>
+    <div *ngIf="isAdmin" class="flex gap-3">
+      <button (click)="approve(t._id)"
+              class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">Approve</button>
+      <button (click)="reject(t._id)"
+              class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition">Reject</button>
+      <span *ngIf="!t.isApproved" class="ml-auto px-3 py-1 rounded-full text-sm bg-yellow-100 text-yellow-800">Pending</span>
+      <span *ngIf="t.isApproved" class="ml-auto px-3 py-1 rounded-full text-sm bg-green-100 text-green-800">Approved</span>
+    </div>
+  </div>
+</div>
