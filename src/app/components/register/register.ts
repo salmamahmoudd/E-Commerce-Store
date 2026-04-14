@@ -24,6 +24,7 @@ export class Register {
       password: ['', [Validators.required, Validators.minLength(6)]],
       repassword: ['', [Validators.required]],
     }, { validators: this.passwordMatch });
+
   }
 
   passwordMatch(group: FormGroup) {
@@ -32,16 +33,22 @@ export class Register {
     return pass === repass ? null : { mismatch: true };
   }
 
-  register() {
-    if (this.registerForm.invalid) return;
+register() {
+  console.log("FORM VALUE:", this.registerForm.value);
+  console.log("VALID:", this.registerForm.valid);
 
-    this.auth.register(this.registerForm.value).subscribe({
-      next: (res) => {
-        this.router.navigate(['/login']);
-      },
-      error: (err) => {
-        this.error = err.error.message;
-      }
-    });
-  }
+  if (this.registerForm.invalid) return;
+
+  const { name, email, phone, password } = this.registerForm.value;
+
+  this.auth.register({ name, email, phone, password }).subscribe({
+    next: () => {
+      this.router.navigate(['/login']);
+    },
+    error: (err) => {
+      console.log(err);
+      this.error = err.error?.message;
+    }
+  });
+}
 }

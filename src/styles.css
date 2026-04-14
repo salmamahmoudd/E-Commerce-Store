@@ -5,25 +5,42 @@
 @tailwind utilities;
 
 :root {
-  --mauve-dark: #1e1c1b;      /* Dark text / main accents */
-  --mauve-light: #EBE5E4;     /* Light background */
-  --peach-soft: #564c49;      /* Buttons / highlights / hover */
-  --taupe: #9B8B84;           /* Secondary text */
-  --rose-gray: #ddc9d2;       /* Cards / containers / soft elements */
+  --mauve-dark: #3d3d3d;      
+  --mauve-light: #fcf7f8;     
+  --peach-soft: #380c1c;      
+  --taupe: #6b6b6b;           
+  --rose-gray: #f3e8ff;       
 }
 
 /* ===============================
    Navbar Light Theme
 ================================ */
 .navbar {
-  background: linear-gradient(
-    135deg,
-    var(--peach-soft),
-    var(--rose-gray),
-    var(--mauve-light)
-  );  padding: 1rem 2rem;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.07);
-  font-family: 'Poppins', sans-serif;
+  background: var(--mauve-light);
+  border-bottom: 1px solid #eee;
+  box-shadow: none;
+  padding: 1rem 2rem;
+}
+
+.nav-link {
+  color: var(--mauve-dark);
+  position: relative;
+  transition: 0.3s;
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0%;
+  height: 1.5px;
+  background: var(--peach-soft);
+  transition: 0.3s;
+}
+
+.nav-link:hover::after {
+  width: 100%;
 }
 
 .nav-wrapper {
@@ -46,7 +63,6 @@
   color: var(--mauve-light);
     transition: all 0.3s;
 }
-
 
 .nav-right {
   display: flex;
@@ -73,26 +89,26 @@
   transition: all 0.3s;
 }
 
-
 /* Outline button (Login) */
+.btn-primary {
+  background: #000;
+  color: #fff;
+  border-radius: 12px;
+}
+
+.btn-primary:hover {
+  background: #fff;
+  color: #000;
+  border: 1px solid #000;
+}
+
 .btn-outline {
-  border: 2px solid var(--peach-soft);
+  border: 1px solid var(--mauve-dark);
   color: var(--mauve-dark);
 }
 
 .btn-outline:hover {
-  background-color: var(--peach-soft);
-  color: #fff;
-}
-
-/* Primary button (Register) */
-.btn-primary {
-  background-color: var(--peach-soft);
-  color: #fff;
-}
-
-.btn-primary:hover {
-  background-color: var(--mauve-dark);
+  background: var(--mauve-dark);
   color: #fff;
 }
 
@@ -141,27 +157,30 @@
 a .fas.fa-shopping-cart {
   font-size: 1.5rem;
   color: var(--mauve-dark);
+  transition: 0.3s;
 }
 
+a .fas.fa-shopping-cart:hover {
+  transform: scale(1.1);
+  opacity: 0.7;
+}
 .cart-count {
   position: absolute;
   top: -6px;
   right: -8px;
-  background-color: red;
   color: white;
   font-size: 0.7rem;
   font-weight: bold;
   padding: 2px 5px;
   border-radius: 50%;
+  background: #ff4d6d;
+  box-shadow: 0 0 10px rgba(255,77,109,0.6); 
 }
 /* Profile Panel Gradient */
 .profile-panel {
-  background: linear-gradient(
-    135deg,
-    var(--peach-soft),
-    var(--rose-gray),
-    var(--mauve-light)
-  );
+  background: var(--mauve-light);
+  border-left: 1px solid #eee;
+  backdrop-filter: blur(20px);
 }
 
 /* Profile Icon */
@@ -176,7 +195,7 @@ img.profile-img {
 }
 
 img.profile-img:hover {
-  transform: scale(1.05);
+  transform: scale(1.08);
 }
 
 
@@ -223,7 +242,9 @@ img.profile-img:hover {
 }
 
 .auth-card {
-  background: var(--rose-gray);
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.08);
   padding: 2.5rem 2rem;
   border-radius: 20px;
   max-width: 400px;
@@ -398,11 +419,11 @@ img.profile-img:hover {
     var(--peach-soft),
     var(--rose-gray),
     var(--mauve-light)
-  );  padding: 2.5rem 2rem;
+  );  
+  padding: 2.5rem 2rem;
   border-radius: 20px;
   max-width: 450px;
   width: 100%;
-  box-shadow: 0 12px 25px rgba(0,0,0,0.1);
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -817,8 +838,6 @@ img.profile-img:hover {
 /* ===============================
    RESPONSIVE - NAVBAR
 ================================ */
-
-/* Mobile (أقل من 576px) */
 @media (max-width: 575px) {
   .navbar {
     padding: 0.7rem 1rem;
@@ -919,6 +938,9 @@ img.profile-img:hover {
 
 .animate-toast {
   animation: slideUpFade 0.5s ease-out;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  backdrop-filter: blur(10px);
 }
 
 @keyframes slideUpFade {
